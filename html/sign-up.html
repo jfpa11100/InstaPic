@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/index.css">
     <title>InstaPic - Registro</title>
 </head>
 <body>
@@ -10,23 +11,15 @@
         <h1>InstaPic</h1>
     </header>
     <main>
-        <label for="username">Nombre de usuario</label>
-        <input type="text" id="username"/>
-        
-        <label for="email">Email</label>
-        <input type="email" id="email"/>
-
-        <label for="password">Contraseña</label>
-        <input type="password" id="password"/>
-        
-        <label for="re-password">Confirme contraseña</label>
-        <input type="password" id="re-password"/>
-        <a href="">
-            <button>Registrarse</button>
-        </a>
-        <a href="index.html">
-            ¿Ya tiene cuenta?
-        </a>
+        <div class="login-box">
+            <h2>Registrarse</h2>
+            <input type="text" id="username" placeholder="Nombre de usuario"/>
+            <input type="email" id="email" placeholder="Email"/>
+            <input type="pasword" id="password" placeholder="Contraseña"/>
+            <input type="password" id="re-password" placeholder="Confirmar contraseña"/>
+            <a href="">Registrarse</a>
+            <a href="index.html">¿Ya tiene cuenta?</a>
+        </div>
     </main>
     <footer>
         &copy; Derechos reservados - Información
