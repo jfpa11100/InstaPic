@@ -1,6 +1,6 @@
 body {
     color: #023047;
-    font-family: arial, sans-serif;
+    font-family: 'Ubuntu', arial, sans-serif;
     color: #023047 ;
     background-color: #b2b2b2;
     display: flex;
@@ -17,6 +17,24 @@ header {
     margin-bottom: 5px;
 }
 
+footer {
+    background-color: #023047;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+}
+footer ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+}
+footer > ul > li + li {
+    margin-left: 30px;
+}
+
 main {
     display: flex;
     flex: 1;
@@ -26,11 +44,15 @@ main {
 }
 
 .login-box {
+    display: flex;
+    flex-direction: column;
     background-color: white;
-    width: 30dvw;
-    padding: 20px 40px;
+    width: 26dvw;
+    padding: 45px 40px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0.1);
+    align-items: center;
+    justify-content: center;
 }
 
 .login-box h2 {
@@ -58,13 +80,29 @@ main {
 
 .login-box a {
     display: block;
-    background-color: #219ebc;
-    width: fit-content;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    width: 100px;
     padding: 5px 15px;
     border-radius: 5px;
-    margin: 5px 0 5px 0;
-
 }
+
+.login-box a + a{
+    margin-top: 20px;
+}
+
 .login-box a:hover {
+    background-color: #023047;
+}
+
+.primary {
+    background-color: #219ebc;
+}
+
+.secondary {
     background-color: #fb8500;
+}
+.fab {
+    font-size: 30px;
 }
