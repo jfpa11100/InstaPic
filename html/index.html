@@ -19,7 +19,7 @@
             <h2>Iniciar Sesión</h2>
             <input type="text" id="username" placeholder="Nombre de usuario"/>
             <input type="password" id="password" placeholder="Contraseña"/>
-            <a href="home.html" class="primary">Ingresar</a>
+            <a onclick="login()" class="primary">Ingresar</a>
             <a href="sign-up.html" class="secondary">Registrarse</a>
         </div>
     </main>
@@ -31,5 +31,11 @@
         </ul>
         &copy; Derechos reservados
     </footer>
+    <script>
+        function login() {
+            let username = document.getElementById('username').value
+            let password = document.getElementById('password').value
+        }
+    </script>
 </body>
 </html>

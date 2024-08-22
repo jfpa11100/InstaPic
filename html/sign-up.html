@@ -21,7 +21,7 @@
             <input type="email" id="email" placeholder="Email"/>
             <input type="pasword" id="password" placeholder="Contraseña"/>
             <input type="password" id="re-password" placeholder="Confirmar contraseña"/>
-            <a href="index.html" class="primary">Registrarse</a>
+            <a onclick="signUp()" class="primary">Registrarse</a>
             <a href="index.html" class="secondary">¿Ya tiene cuenta?</a>
         </div>
     </main>
@@ -33,5 +33,13 @@
         </ul>
         &copy; Derechos reservados
     </footer>
+    <script>
+        function signUp() {
+            let username = document.getElementById('username').value
+            let password = document.getElementById('password').value
+
+            localStorage.setItem(username,password)
+        }
+    </script>
 </body>
 </html>
