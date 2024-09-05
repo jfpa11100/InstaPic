@@ -1,1 +1,116 @@
 /* You can add global styles to this file, and also import other style files */
+
+body {
+    color: #023047;
+    font-family: 'Ubuntu', arial, sans-serif;
+    color: #023047 ;
+    background-color: #b2b2b2;
+    padding: 0;
+}
+
+app-root {
+    display: flex;
+    flex-direction: column;
+    min-height: 98vh;
+}
+
+header {
+    background-color: #219edc;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    border-radius: 10px;
+    margin-bottom: 5px;
+}
+
+.login-box {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    width: 500px;
+    min-width: 300px;
+    padding: 45px 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0.1);
+    align-items: center;
+    justify-content: center;
+}
+
+.login-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-box input {
+    background-color: white;
+    border: 2px solid #219ebc;
+    color: #023047;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    width: 100%;
+    display: block;
+    margin: 0 auto 20px auto;
+    box-sizing: border-box;
+}
+.login-box input:focus {
+    border-color: #fb8500 ;
+    outline: none;
+    background-color: #e4faff;
+}
+
+.login-box a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    width: 100px;
+    padding: 5px 15px;
+    border-radius: 5px;
+}
+
+.login-box a + a{
+    margin-top: 20px;
+}
+
+.login-box a:hover {
+    background-color: #023047;
+}
+
+
+footer {
+    background-color: #023047;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+}
+footer ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+}
+footer > ul > li + li {
+    margin-left: 30px;
+}
+
+main {
+    display: flex;
+    flex: 1;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.primary {
+    background-color: #219ebc;
+}
+
+.secondary {
+    background-color: #fb8500;
+}
+.fab {
+    font-size: 30px;
+}
