@@ -1,11 +1,17 @@
+/* You can add global styles to this file, and also import other style files */
+
 body {
     color: #023047;
     font-family: 'Ubuntu', arial, sans-serif;
     color: #023047 ;
     background-color: #b2b2b2;
+    padding: 0;
+}
+
+app-root {
     display: flex;
     flex-direction: column;
-    min-height: 97vh;
+    min-height: 98vh;
 }
 
 header {
@@ -17,37 +23,12 @@ header {
     margin-bottom: 5px;
 }
 
-footer {
-    background-color: #023047;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    border-radius: 10px;
-}
-footer ul {
-    display: flex;
-    list-style: none;
-    padding: 0;
-}
-footer > ul > li + li {
-    margin-left: 30px;
-}
-
-main {
-    display: flex;
-    flex: 1;
-    padding: 10px;
-    justify-content: center;
-    align-items: center;
-}
-
 .login-box {
     display: flex;
     flex-direction: column;
     background-color: white;
-    width: 26dvw;
+    width: 500px;
+    min-width: 300px;
     padding: 45px 40px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0.1);
@@ -94,6 +75,33 @@ main {
 
 .login-box a:hover {
     background-color: #023047;
+}
+
+
+footer {
+    background-color: #023047;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+}
+footer ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+}
+footer > ul > li + li {
+    margin-left: 30px;
+}
+
+main {
+    display: flex;
+    flex: 1;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
 }
 
 .primary {
