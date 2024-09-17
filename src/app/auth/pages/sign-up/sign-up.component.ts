@@ -22,7 +22,6 @@ import { UserService } from '../../services/user.service';
         <a [routerLink]="['/login']" class="secondary">¿Ya tiene cuenta?</a>
     </div>
   `,
-  styleUrl: './sign-up.component.css'
 })
 export class SignUpComponent {
   

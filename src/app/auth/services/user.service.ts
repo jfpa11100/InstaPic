@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { User } from '../interfaces/user.interface';
 import { LogInResponse, SignUpResponse } from '../interfaces/login-response.interface';
 
@@ -7,16 +7,24 @@ import { LogInResponse, SignUpResponse } from '../interfaces/login-response.inte
 })
 export class UserService {
 
-  constructor() { }
+  currentUser = signal<User>({username: '', password: ''});
 
   logIn(username:string, password:string): LogInResponse{
-    const storedPassword = localStorage.getItem(username.toLowerCase())
-    if (storedPassword !== password){
+    const userStr = localStorage.getItem(username.toLowerCase())
+    if (!userStr){
+      return {
+        success: false,
+        message:'Usuario no registrado'
+      }
+    }
+    const user:User = JSON.parse(userStr);
+    if (user.password !== password){
       return {
         success: false,
         message:'Usuario o contraseña incorrecta'
       }
     }
+    this.setUser(user)
     return {
       success: true
     }
@@ -29,12 +37,27 @@ export class UserService {
         message:'El usuario ya está registrado'
       }
     }
-
-    localStorage.setItem(user.username.trim().toLowerCase(), user.password)
+    const userStr = JSON.stringify(user)
+    localStorage.setItem(user.username.trim().toLowerCase(), userStr)
+    this.setUser(user)
     return {
       success: true
     }
   }
 
+  private setUser(user:User){
+    localStorage.setItem('userLogged', JSON.stringify(user))
+    this.currentUser.set(user)
+  }
 
+  getUser() {
+    if (!this.currentUser().username){
+      const userStr = localStorage.getItem('userLogged')
+      if (userStr){
+        const userLogged = JSON.parse(userStr)
+        this.currentUser.set(userLogged)
+      }
+    } 
+    return this.currentUser() 
+  }
 }

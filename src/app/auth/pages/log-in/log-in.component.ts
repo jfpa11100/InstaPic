@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { User } from '../../interfaces/user.interface';
 import Swal from 'sweetalert2';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-log-in',
@@ -19,7 +20,6 @@ import Swal from 'sweetalert2';
       <a [routerLink]="['/sign-up']" class="secondary">Registrarse</a>
     </div>
   `,
-  styleUrl: './log-in.component.css'
 })
 export class LogInComponent{
   
@@ -27,13 +27,17 @@ export class LogInComponent{
     username: '',
     password: ''  
   }
-  loginForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router ){
+  loginForm: FormGroup;
+  userService: UserService;
+
+  constructor(private fb: FormBuilder, private router: Router, private us: UserService ){
     this.loginForm = this.fb.group({
       username: [''],
       password: ['']  
-    })    
+    })
+
+    this.userService = us;
   }
 
   onLogin():void{
@@ -48,17 +52,16 @@ export class LogInComponent{
     let username = this.loginForm.value.username;
     let password = this.loginForm.value.password;
 
-    const storedPassword = localStorage.getItem(username.toLowerCase())
+    const response = this.userService.logIn(username, password)
 
-    if (storedPassword === null){
-      alert("Usuario no registrado")
-      return
-    }
-    else if (password === storedPassword){
-      this.router.navigateByUrl('/home')  
+    if (response.success){
+      this.router.navigateByUrl('/home');
     }
     else {
-      alert("Contraseña incorrecta")
+      Swal.fire({
+        text: response.message,
+        icon: 'error',
+      })
     }
   }
 }
