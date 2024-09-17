@@ -1,24 +1,30 @@
+html{
+    min-width: 375px;
+}
 
 body {
+    text-align: center;
     color: #023047;
     font-family: 'Ubuntu', arial, sans-serif;
     background-color: #e9e9e9;
-    padding: 0;
+    height: 98dvh;
 }
 
 app-root {
     display: flex;
     flex-direction: column;
-    min-height: 98vh;
+    justify-content: center;
+    min-height: 99dvh;
 }
-
+app-header {
+    margin: 0;
+    padding: 0;
+}
 header {
     background-color: #219edc;
     color: white;
-    padding: 15px;
     text-align: center;
     border-radius: 10px;
-    margin-bottom: 5px;
 }
 
 .login-box {
@@ -36,7 +42,7 @@ header {
 
 .login-box h2 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .login-box input {
@@ -111,4 +117,24 @@ main {
 }
 .fab {
     font-size: 30px;
+}
+
+@media screen and (max-width: 600px) {
+    .login-box{
+        width: 95%;
+        justify-self: center;
+        min-width: 355px;
+        padding: 0 0 15px 0;
+        margin: 0px;
+    }
+    header{
+        width: 100%;
+        min-width: 90%;
+        width: fit-content;
+    }
+    footer{
+        /* width: 100%; */
+        width: fit-content;
+        min-width: 90%;
+    }
 }
