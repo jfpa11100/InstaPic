@@ -5,6 +5,6 @@ Repo guide: https://github.com/jjzapata81/instapic
 
 url: https://dixkxtubzbxzxlarbclx.supabase.co
 
-apik: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRpeGt4dHViemJ4enhsYXJiY2x4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY3MDIwNDgsImV4cCI6MjA0MjI3ODA0OH0.1wZ99kjnjSlQWdb21ZtKFqatda0khdHSuLY-S8xuLYc
+apik: 
 
 password: C9ARAX03D6aaGjPM
