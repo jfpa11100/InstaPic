@@ -12,7 +12,7 @@ import { GalleryItem } from '../../interfaces/gallery-item.interface';
     <section id="profile">
       <div>
           <img src="avatar.jpg" alt="avatar" />
-          <p>Hola {{ currentUser.username }}!</p>
+          <p>Hola {{ currentUser().username }}!</p>
       </div>
       <div>
           <h2>{{ followers }}</h2>

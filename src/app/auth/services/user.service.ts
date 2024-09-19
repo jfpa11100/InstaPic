@@ -30,6 +30,10 @@ export class UserService {
     }
   }
 
+  logout(){
+    
+  }
+
   register(user: User): SignUpResponse{
     if (localStorage.getItem(user.username.trim().toLowerCase())){
       return {
@@ -58,6 +62,6 @@ export class UserService {
         this.currentUser.set(userLogged)
       }
     } 
-    return this.currentUser() 
+    return this.currentUser
   }
 }

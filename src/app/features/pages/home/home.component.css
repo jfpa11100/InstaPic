@@ -62,17 +62,26 @@ div h2{
     padding: 20px;
   }
   
-  #gallery .gallery-item{
+  #gallery {
     display: flex;
     flex-direction: column;
+    gap: 20px;
+  }
+
+  .gallery-item{
+    display: flex;
+    flex-direction: column;
+    object-fit: cover;
+    justify-content: center;
+    width: 450px;
+    height: 300px;
   }
   
   #gallery img{
     flex:1;
-    width: 300px;
-    height: 200px;
+    width: 450px;
+    height: 300px;
     object-fit: cover;
-    /* margin: 0 20px; */
     padding: 5px;
     border: 1px solid #fff;
   }
