@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
   imports: [],
   template: `
     <section>
-      <input type="file"/>
+      <input type="file" (change)="onUpload($event)" />
     </section>
   `,
   styleUrl: './new-post.component.css'
