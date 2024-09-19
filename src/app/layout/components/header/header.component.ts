@@ -1,99 +1,44 @@
-import { Component } from '@angular/core';
+import { Component, Signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { UserService } from '../../../auth/services/user.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   template: `
-    @if (true) {
-      <header>
-          <h1>InstaPic</h1>
-      </header>
-    }
-    @else {
-      <header>
-        <nav>
-            <h1>InstaPic</h1>
-            <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="">Subir fotos</a></li>
-                <li><a href="">Buscar</a></li>
-                <li><a href="index.html">Cerrar sesión</a></li>
-            </ul>
-        </nav>
+    <header>
+      @if(user().username){
+      <nav>
+        <ul>
+          <li>InstaPIC</li>
+          <li><a [routerLink]="['/home']">Inicio</a></li>
+          <li><a [routerLink]="['/profile']">Mi perfil</a></li>
+          <li><a [routerLink]="['/search']">Buscar</a></li>
+          <li><a [routerLink]="['/new-post']">Nueva publicación</a></li>
+          <li><a (click)="logout()">Cerrar sesión</a></li>
+        </ul>
+      </nav>
+      }@else{
+        <h1>InstaPIC</h1>
+      }
     </header>
-    }
   `,
-  styles: `
-    header {
-      background-color: #219edc;
-      color: white;
-      padding: 15px;
-      text-align: center;
-      border-radius: 10px;
-      margin-bottom: 5px;
-    }
-
-    nav{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-  }
-
-  nav a{
-      text-decoration: none;
-      color: white;
-  }
-
-  nav a:hover{
-      color: #023047;
-  }
-
-
-  nav ul {
-      display: flex;
-      gap: 50px;
-  }
-
-  ul{
-      list-style: none;
-      padding: 0;
-  }
-
-  @media (max-width: 650px) {
-    #profile {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    nav ul{
-        gap: 20px;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    nav ul li {
-        margin: 10px 0;
-        text-align: center;
-    }
-}
-
-@media (max-width: 490px) {
-    #profile {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        text-align: center;
-    }
-    #profile h2, p{
-        margin: 0;
-    }
-}
-  `
+  styleUrl: './header.component.css'
 })
 export class HeaderComponent {
+
+  userService: UserService;
+  user;
+  constructor(private router:Router, private us:UserService){
+    this.userService = us;
+    this.user = this.userService.getUser();
+  }
+
+  logout(){
+    this.userService.logout();
+    this.user = this.userService.getUser();
+    this.router.navigateByUrl('');
+  }
 
 }

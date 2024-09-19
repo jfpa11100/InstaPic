@@ -30,6 +30,10 @@ export class UserService {
     }
   }
 
+  logout(){
+    
+  }
+
   register(user: User): SignUpResponse{
     if (localStorage.getItem(user.username.trim().toLowerCase())){
       return {
@@ -52,12 +56,12 @@ export class UserService {
 
   getUser() {
     if (!this.currentUser().username){
-      const userStr = localStorage.getItem('userLogged')
-      if (userStr){
-        const userLogged = JSON.parse(userStr)
-        this.currentUser.set(userLogged)
-      }
+    //   const userStr = localStorage.getItem('userLogged')
+    //   if (userStr){
+    //     const userLogged = JSON.parse(userStr)
+    //     this.currentUser.set(userLogged)
+    //   }
     } 
-    return this.currentUser() 
+    return this.currentUser
   }
 }
