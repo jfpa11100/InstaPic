@@ -1,0 +1,15 @@
+section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+input {
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 400px;
+    background-color: bisque;
+}

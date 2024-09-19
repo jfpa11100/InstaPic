@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
   imports: [],
   template: `
     <section>
+      <h3>Nueva publicación</h3>
       <input type="file" (change)="onUpload($event)" />
     </section>
   `,
