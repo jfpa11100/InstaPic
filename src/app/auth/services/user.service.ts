@@ -31,7 +31,8 @@ export class UserService {
   }
 
   logout(){
-    
+    localStorage.removeItem('loggedUser');
+    this.currentUser.set({username:'', password:'', email:''});
   }
 
   register(user: User): SignUpResponse{
@@ -56,11 +57,11 @@ export class UserService {
 
   getUser() {
     if (!this.currentUser().username){
-    //   const userStr = localStorage.getItem('userLogged')
-    //   if (userStr){
-    //     const userLogged = JSON.parse(userStr)
-    //     this.currentUser.set(userLogged)
-    //   }
+      const userStr = localStorage.getItem('userLogged')
+      if (userStr){
+        const userLogged = JSON.parse(userStr)
+        this.currentUser.set(userLogged)
+      }
     } 
     return this.currentUser
   }
