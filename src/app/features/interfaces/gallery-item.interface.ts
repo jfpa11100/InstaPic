@@ -1,5 +1,5 @@
 export interface GalleryItem{
-    id: number,
+    id: string,
     url: string,
     comments: string[],
 }

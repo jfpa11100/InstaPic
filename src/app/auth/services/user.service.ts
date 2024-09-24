@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { User } from '../interfaces/user.interface';
 import { LogInResponse, SignUpResponse } from '../interfaces/login-response.interface';
+import { GalleryItem } from '../../features/interfaces/gallery-item.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -64,5 +65,32 @@ export class UserService {
       }
     } 
     return this.currentUser
+  }
+
+  saveGalleryItem(galleryItem: GalleryItem, username:string){
+    let gallery = this.getGallery(username)
+    gallery = [...gallery, galleryItem]
+    localStorage.setItem(`gallery-${username}`, JSON.stringify(gallery))
+  }
+
+  getGallery(username:string){
+    let galleryStr = localStorage.getItem(`gallery-${username}`)
+    let gallery:GalleryItem[] = [] 
+    if (galleryStr){
+      gallery = JSON.parse(galleryStr) 
+    }
+    return gallery
+  }
+
+  updateGalleryItem(gallery: GalleryItem[], username:string){
+    localStorage.setItem(`gallery-${username}`, JSON.stringify(gallery))
+  }
+
+  saveProfile(username:string){
+    // localStorage.setItem(`profile-${username}` )
+  }
+
+  getProfile(username:string){
+    localStorage.getItem(`profile-${username}`)
   }
 }

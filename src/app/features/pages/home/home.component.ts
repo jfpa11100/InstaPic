@@ -11,8 +11,8 @@ import { GalleryItem } from '../../interfaces/gallery-item.interface';
   template: `
     <section id="profile">
       <div>
-          <img src="avatar.jpg" alt="avatar" />
-          <p>Hola {{ currentUser().username }}!</p>
+          <img [src]="profilePhoto || 'avatar.jpg'" alt="avatar" />
+          <p>Hola {{ user().username }}!</p>
       </div>
       <div>
           <h2>{{ followers }}</h2>
@@ -43,34 +43,29 @@ import { GalleryItem } from '../../interfaces/gallery-item.interface';
 export class HomeComponent {
   followers:number = 20
   requests = 150
+  profilePhoto = ''
 
-  currentUser;
-  galleryItems = signal<GalleryItem[]>([
-    {id: 1, url: "image1.jpg" , comments: []},
-    {id: 2, url: "image2.jpg" , comments: []},
-    {id: 3, url: "image3.jpg" , comments: []},
-    {id: 4, url: "image4.jpg" , comments: []},
-    {id: 5, url: "image5.jpg" , comments: []},
-    {id: 6, url: "image6.jpg" , comments: []},
-    {id: 7, url: "image7.jpg" , comments: []},
-    {id: 8, url: "image8.jpg" , comments: []},
-    {id: 9, url: "image9.jpg" , comments: []},
-    {id: 10, url: "image10.jpg", comments: []},
-    
-  ])
+  user;
+  galleryItems = signal<GalleryItem[]>([])
   
   constructor(private userService:UserService) {
-    this.currentUser = userService.getUser()
+    this.user = userService.getUser()
+    this.galleryItems.set(this.userService.getGallery(this.user().username));
   }
   
-  onAddComment(event: Event, id:number){
+  onAddComment(event: Event, id:string){
     const input = event.target as HTMLInputElement
-    const newComment = input.value
+    if(!input.value){
+      return;
+    }
     this.galleryItems.update(items => {
       let selected = items.find(item => item.id === id)
-      selected!.comments = [...selected!.comments, newComment]
+      if (selected){
+        selected!.comments = [...selected!.comments, input.value]
+      }
       return items
     })
+    this.userService.updateGalleryItem(this.galleryItems(),this.user().username)
     input.value = ''
   }
 
@@ -88,7 +83,7 @@ export class HomeComponent {
     })
   }
 
-  onDelete(id: number){
+  onDelete(id: string){
     Swal.fire({
       text: 'Está seguro de eliminar la imagen',
       icon: 'warning',
@@ -102,6 +97,7 @@ export class HomeComponent {
       if (result.isConfirmed) {
         Swal.fire('Imagen eliminada', '', 'success')
         this.galleryItems.update(items => items.filter(item => item.id !== id))
+        this.userService.updateGalleryItem(this.galleryItems(), this.user().username)
       } else if (result.isDismissed) {
         Swal.fire('Operación cancelada', '', 'info')
       }

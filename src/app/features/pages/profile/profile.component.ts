@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { PostsService } from '../../services/posts.service';
-import { UserService } from '../../../auth/services/user.service';
-import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
+import { UserService } from '../../../auth/services/user.service';
+import { PostsService } from '../../services/posts.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
-  selector: 'app-new-post',
+  selector: 'app-profile',
   standalone: true,
   imports: [],
   template: `
@@ -15,20 +15,21 @@ import Swal from 'sweetalert2';
       <img [src]="uploadedUrl">  
     </section>
   `,
-  styleUrl: './new-post.component.css'
+  styleUrl: './profile.component.css'
 })
-export class NewPostComponent {
-  userService: UserService;
-  postService: PostsService;
+export class ProfileComponent {
 
-  uploadedUrl = ''
+  uploadedUrl: string = '';
+  userService: UserService
+  postService: PostsService
   user;
 
-  constructor(private ps: PostsService, private us: UserService){
+  constructor(us:UserService, ps:PostsService){
     this.userService = us;
-    this.user = this.userService.getUser();
     this.postService = ps;
+    this.user = this.userService.getUser();
   }
+
 
   onUpload(event:Event){
     Swal.fire({
@@ -44,8 +45,8 @@ export class NewPostComponent {
       return;
     }
     const file:File = inputFile.files[0];
-    const filename = uuidv4();
-    this.postService.uploadFile(file, filename, this.user().username, 'instapic')
+    const filename = uuidv4()
+    this.postService.uploadFile(file, filename, this.user().username, 'profile')
     .then(data => {
       this.uploadedUrl = data!;
       this.userService.saveGalleryItem({ id:filename, url:this.uploadedUrl, comments:[] }, this.user().username);
@@ -57,3 +58,4 @@ export class NewPostComponent {
     });
   }
 }
+

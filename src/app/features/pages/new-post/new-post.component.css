@@ -1,15 +1,27 @@
 section {
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
-
 }
 
 input {
+    display: none;
+}
+
+label {
+    cursor: pointer;
     text-align: center;
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
-    width: 400px;
-    background-color: bisque;
+    background-color: #fb8500;
+}
+label:hover{
+    background-color: #a55800;
+}
+
+
+img {
+    width: 40%;
+    object-fit: cover;
 }
