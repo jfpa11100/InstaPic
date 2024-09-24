@@ -58,13 +58,15 @@ export class UserService {
 
   getUser() {
     if (!this.currentUser().username){
-      const userStr = localStorage.getItem('userLogged')
-      if (userStr){
-        const userLogged = JSON.parse(userStr)
-        this.currentUser.set(userLogged)
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const userSrt = localStorage.getItem('loggedUser');
+        if (userSrt) {
+          const user = JSON.parse(userSrt);
+          this.currentUser.set(user);
+        }
       }
-    } 
-    return this.currentUser
+    }
+    return this.currentUser;
   }
 
   saveGalleryItem(galleryItem: GalleryItem, username:string){
@@ -74,10 +76,12 @@ export class UserService {
   }
 
   getGallery(username:string){
-    let galleryStr = localStorage.getItem(`gallery-${username}`)
     let gallery:GalleryItem[] = [] 
-    if (galleryStr){
-      gallery = JSON.parse(galleryStr) 
+    if (typeof window !== 'undefined' && window.localStorage) {
+      let galleryStr = localStorage.getItem(`gallery-${username}`)
+      if (galleryStr){
+        gallery = JSON.parse(galleryStr) 
+      }
     }
     return gallery
   }
