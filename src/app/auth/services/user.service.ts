@@ -2,53 +2,56 @@ import { Injectable, signal } from '@angular/core';
 import { User } from '../interfaces/user.interface';
 import { LogInResponse, SignUpResponse } from '../interfaces/login-response.interface';
 import { GalleryItem } from '../../features/interfaces/gallery-item.interface';
+import { HttpClient } from '@angular/common/http';
+import { Observable, catchError, map, tap, throwError } from 'rxjs'
+import { UserLoginResponse } from '../interfaces/user-login-response.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  currentUser = signal<User>({username: '', password: ''});
+  constructor(private http:HttpClient){}
 
-  logIn(username:string, password:string): LogInResponse{
-    const userStr = localStorage.getItem(username.toLowerCase())
-    if (!userStr){
-      return {
-        success: false,
-        message:'Usuario no registrado'
-      }
+  currentUser = signal<User>({name: '', username: ''});
+
+  logIn(username:string, password:string): Observable<LogInResponse>{
+    const body = {
+      username,
+      password
     }
-    const user:User = JSON.parse(userStr);
-    if (user.password !== password){
-      return {
-        success: false,
-        message:'Usuario o contraseña incorrecta'
-      }
-    }
-    this.setUser(user)
-    return {
-      success: true
-    }
+    return this.http.post<UserLoginResponse>('http://localhost:3000/api/user/login', body).pipe(
+      tap(data => {
+        sessionStorage.setItem('token', data.token)
+        this.setUser({ name: data.name, photo: data.photo, username: data.username })
+      }),
+      map(() => {
+        return { success: true}
+      }),
+      catchError(eer => throwError(() => eer.error.message))
+    );
   }
 
   logout(){
     localStorage.removeItem('loggedUser');
-    this.currentUser.set({username:'', password:'', email:''});
+    this.currentUser.set({name:'', username:'', email:''});
   }
 
-  register(user: User): SignUpResponse{
-    if (localStorage.getItem(user.username.trim().toLowerCase())){
-      return {
-        success: false,
-        message:'El usuario ya está registrado'
-      }
-    }
-    const userStr = JSON.stringify(user)
-    localStorage.setItem(user.username.trim().toLowerCase(), userStr)
-    this.setUser(user)
-    return {
-      success: true
-    }
+  register(user: User):Observable<SignUpResponse> {
+    const body = user
+    console.log(body)
+
+
+    return this.http.post<UserLoginResponse>('http://localhost:3000/api/user', body).pipe(
+      tap(data => {
+        sessionStorage.setItem('token', data.token)
+        this.setUser({ name: data.name, photo: data.photo, username: data.username })
+      }),
+      map(() => {
+        return { success: true}
+      }),
+      catchError(eer => throwError(() => eer.error.message))
+    )
   }
 
   private setUser(user:User){
@@ -70,9 +73,22 @@ export class UserService {
   }
 
   saveGalleryItem(galleryItem: GalleryItem, username:string){
-    let gallery = this.getGallery(username)
-    gallery = [...gallery, galleryItem]
-    localStorage.setItem(`gallery-${username}`, JSON.stringify(gallery))
+    const body = {
+      url: galleryItem.url,
+      username: username
+    }
+
+    return this.http.post<GalleryItem>('http://localhost:3000/api/posts', body).pipe(
+      tap(),
+      map(data => {
+        let gallery = this.getGallery(username)
+        gallery.push(data)
+        this.updateGalleryItem(gallery, username)
+        return data
+      }),
+      catchError(eer => throwError(() => eer.error.message))
+    )
+
   }
 
   getGallery(username:string){

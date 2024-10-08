@@ -24,8 +24,8 @@ import { UserService } from '../../services/user.service';
 export class LogInComponent{
   
   user: User = {
+    name: '',
     username: '',
-    password: ''  
   }
 
   loginForm: FormGroup;
@@ -52,16 +52,16 @@ export class LogInComponent{
     let username = this.loginForm.value.username;
     let password = this.loginForm.value.password;
 
-    const response = this.userService.logIn(username, password)
-
-    if (response.success){
-      this.router.navigateByUrl('/home');
-    }
-    else {
-      Swal.fire({
-        text: response.message,
-        icon: 'error',
-      })
-    }
+    this.userService.logIn(username, password).subscribe({
+      next:() => {
+        this.router.navigateByUrl('/home');
+      },
+      error: (message) =>{
+        Swal.fire({
+          text: message,
+          icon: 'error',
+        })
+      } 
+    })
   }
 }

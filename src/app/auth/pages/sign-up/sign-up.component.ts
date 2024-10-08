@@ -13,6 +13,7 @@ import { UserService } from '../../services/user.service';
     <div class="login-box">
         <h2>Registrarse</h2>
         <form [formGroup]="registerForm">
+          <input type="text" formControlName="name" id="name" placeholder="Nombre"/>
           <input type="text" formControlName="username" id="username" placeholder="Nombre de usuario"/>
           <input type="email" formControlName="email" id="email" placeholder="Email"/>
           <input type="password" formControlName="password" id="password" placeholder="Contraseña"/>
@@ -27,13 +28,15 @@ export class SignUpComponent {
   
   user: User = {
     username: '',
-    password: ''  
+    name: ''
   }
+
   registerForm!: FormGroup;
   userService!: UserService;
 
   constructor(private fb: FormBuilder, private router: Router, private us: UserService){
     this.registerForm = this.fb.group({
+      name: ['', [Validators.required, Validators.maxLength(30)]],
       username: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(15)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(15)]],  
@@ -53,6 +56,7 @@ export class SignUpComponent {
       return;
     }
 
+    const name = this.registerForm.value.name;
     const username = this.registerForm.value.username;
     const email = this.registerForm.value.email;
     const password = this.registerForm.value.password;
@@ -67,15 +71,17 @@ export class SignUpComponent {
       return
     }
 
-    const response = this.userService.register({username, password, email});
-    if (response.success){
-      this.router.navigateByUrl('/home');
-    }
-    else{
-      Swal.fire({
-        title: `${response.message} :(`,
-        icon: 'error',
-      })
-    }
+    this.userService.register({name, username, email, password}).subscribe({
+      next:() => {
+        this.router.navigateByUrl('/home')
+      },
+      error: (error) => {
+        Swal.fire({
+          title: 'Las contraseñas :(',
+          text: error.message,
+          icon: 'error',
+        })
+      }
+    })
   }
 }
