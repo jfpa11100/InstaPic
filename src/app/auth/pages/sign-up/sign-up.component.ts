@@ -74,11 +74,15 @@ export class SignUpComponent {
     this.userService.register({name, username, email, password}).subscribe({
       next:() => {
         this.router.navigateByUrl('/home')
+        Swal.fire({
+          text: 'Registro exitoso',
+          icon: 'success',
+        })
       },
       error: (error) => {
         Swal.fire({
-          title: 'Las contraseñas :(',
-          text: error.message,
+          title: 'Error',
+          text: error,
           icon: 'error',
         })
       }
