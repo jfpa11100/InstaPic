@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { User } from '../interfaces/user.interface';
 import { LogInResponse, SignUpResponse } from '../interfaces/login-response.interface';
 import { GalleryItem } from '../../features/interfaces/gallery-item.interface';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, tap, throwError } from 'rxjs'
 import { UserLoginResponse } from '../interfaces/user-login-response.interface';
 
@@ -72,23 +72,11 @@ export class UserService {
     return this.currentUser;
   }
 
-  saveGalleryItem(galleryItem: GalleryItem, username:string){
-    const body = {
-      url: galleryItem.url,
-      username: username
-    }
+  saveGalleryItem(galleryItem: GalleryItem){
+    // re implement method
 
-    return this.http.post<GalleryItem>('http://localhost:3000/api/posts', body).pipe(
-      tap(),
-      map(data => {
-        let gallery = this.getGallery(username)
-        gallery.push(data)
-        this.updateGalleryItem(gallery, username)
-        return data
-      }),
-      catchError(eer => throwError(() => eer.error.message))
-    )
 
+    
   }
 
   getGallery(username:string){
