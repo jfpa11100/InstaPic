@@ -11,7 +11,7 @@ import { GalleryItem } from '../../interfaces/gallery-item.interface';
   template: `
     <section id="profile">
       <div>
-          <img [src]="profilePhoto || 'avatar.jpg'" alt="avatar" />
+          <img [src]="profilePhoto || 'avatar.jpg'" />
           <p>Hola {{ user().username }}!</p>
       </div>
       <div>
