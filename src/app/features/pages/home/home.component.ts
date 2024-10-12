@@ -8,36 +8,7 @@ import { GalleryItem } from '../../interfaces/gallery-item.interface';
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <section id="profile">
-      <div>
-          <img [src]="profilePhoto || 'avatar.jpg'" />
-          <p>Hola {{ user().username }}!</p>
-      </div>
-      <div>
-          <h2>{{ followers }}</h2>
-          seguidores
-      </div>
-      <div>
-          <h2>{{ galleryItems().length }}</h2>
-          publicaciones
-      </div>
-      <div>
-          <h2>{{ requests }}</h2>
-          solicitudes
-      </div>
-    </section>
-    <section id="gallery">
-      <div class="gallery-item" *ngFor="let item of galleryItems()">
-        <img [src]="item.url" />
-        <div class="comments">
-          <input type="text" (change)="onAddComment($event, item.id)"/>
-          <a (click)="onViewComments(item.comments)"><i class="fas fa-comments"></i></a>
-          <a (click)="onDelete(item.id)"><i class="fas fa-trash-alt"></i></a>
-        </div>
-      </div>
-    </section>
-  `,
+  templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
@@ -48,25 +19,18 @@ export class HomeComponent {
   user;
   galleryItems = signal<GalleryItem[]>([])
   
-  constructor(private userService:UserService) {
-    this.user = userService.getUser()
-    this.galleryItems.set(this.userService.getGallery(this.user().username));
+  constructor(private userService: UserService) {
+    this.user = this.userService.getUser();
+    this.userService.getGallery().subscribe(this.galleryItems.set);
   }
   
   onAddComment(event: Event, id:string){
-    const input = event.target as HTMLInputElement
+    const input = event.target as HTMLInputElement;
     if(!input.value){
       return;
     }
-    this.galleryItems.update(items => {
-      let selected = items.find(item => item.id === id)
-      if (selected){
-        selected!.comments = [...selected!.comments, input.value]
-      }
-      return items
-    })
-    this.userService.updateGalleryItem(this.galleryItems(),this.user().username)
-    input.value = ''
+    this.userService.addComment(id, input.value).subscribe(this.galleryItems.set);
+    input.value = '';
   }
 
   onViewComments(comments: string[]){
@@ -95,9 +59,8 @@ export class HomeComponent {
       cancelButtonText: 'No'
     }).then(result => {
       if (result.isConfirmed) {
+        this.userService.deletePost(id).subscribe(this.galleryItems.set);
         Swal.fire('Imagen eliminada', '', 'success')
-        this.galleryItems.update(items => items.filter(item => item.id !== id))
-        this.userService.updateGalleryItem(this.galleryItems(), this.user().username)
       } else if (result.isDismissed) {
         Swal.fire('Operación cancelada', '', 'info')
       }

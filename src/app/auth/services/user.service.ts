@@ -1,68 +1,81 @@
 import { Injectable, signal } from '@angular/core';
 import { User } from '../interfaces/user.interface';
-import { LogInResponse, SignUpResponse } from '../interfaces/login-response.interface';
+import {
+  LogInResponse,
+  SignUpResponse,
+} from '../interfaces/login-response.interface';
 import { GalleryItem } from '../../features/interfaces/gallery-item.interface';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, map, tap, throwError } from 'rxjs'
+import { Observable, catchError, map, tap, throwError } from 'rxjs';
 import { UserLoginResponse } from '../interfaces/user-login-response.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http:HttpClient){}
+  currentUser = signal<User>({ name: '', username: '' });
 
-  currentUser = signal<User>({name: '', username: ''});
-
-  logIn(username:string, password:string): Observable<LogInResponse>{
+  logIn(username: string, password: string): Observable<LogInResponse> {
     const body = {
       username,
-      password
-    }
-    return this.http.post<UserLoginResponse>('http://localhost:3000/api/user/login', body).pipe(
-      tap(data => {
-        sessionStorage.setItem('token', data.token)
-        this.setUser({ name: data.name, photo: data.photo, username: data.username })
-      }),
-      map(() => {
-        return { success: true}
-      }),
-      catchError(eer => throwError(() => eer.error.message))
-    );
+      password,
+    };
+    return this.http
+      .post<UserLoginResponse>('http://localhost:3000/api/user/login', body)
+      .pipe(
+        tap((data) => {
+          sessionStorage.setItem('token', data.token);
+          this.setUser({
+            name: data.name,
+            photo: data.photo,
+            username: data.username,
+          });
+        }),
+        map(() => {
+          return { success: true };
+        }),
+        catchError((eer) => throwError(() => eer.error.message))
+      );
   }
 
-  logout(){
-    localStorage.removeItem('loggedUser');
-    this.currentUser.set({name:'', username:'', email:''});
+  logout() {
+    localStorage.removeItem('userLogged');
+    this.currentUser.set({ name: '', username: '', email: '' });
   }
 
-  register(user: User):Observable<SignUpResponse> {
-    const body = user
-    console.log(body)
+  register(user: User): Observable<SignUpResponse> {
+    const body = user;
+    console.log(body);
 
-
-    return this.http.post<UserLoginResponse>('http://localhost:3000/api/user', body).pipe(
-      tap(data => {
-        sessionStorage.setItem('token', data.token)
-        this.setUser({ name: data.name, photo: data.photo, username: data.username })
-      }),
-      map(() => {
-        return { success: true}
-      }),
-      catchError(eer => throwError(() => eer.error.message))
-    )
+    return this.http
+      .post<UserLoginResponse>('http://localhost:3000/api/user', body)
+      .pipe(
+        tap((data) => {
+          sessionStorage.setItem('token', data.token);
+          this.setUser({
+            name: data.name,
+            photo: data.photo,
+            username: data.username,
+          });
+        }),
+        map(() => {
+          return { success: true };
+        }),
+        catchError((eer) => throwError(() => eer.error.message))
+      );
   }
 
-  private setUser(user:User){
-    localStorage.setItem('userLogged', JSON.stringify(user))
-    this.currentUser.set(user)
+  private setUser(user: User) {
+    localStorage.setItem('userLogged', JSON.stringify(user));
+    this.currentUser.set(user);
   }
 
   getUser() {
-    if (!this.currentUser().username){
+    if (!this.currentUser().username) {
       if (typeof window !== 'undefined' && window.localStorage) {
-        const userSrt = localStorage.getItem('loggedUser');
+        const userSrt = localStorage.getItem('userLogged');
         if (userSrt) {
           const user = JSON.parse(userSrt);
           this.currentUser.set(user);
@@ -72,33 +85,55 @@ export class UserService {
     return this.currentUser;
   }
 
-  saveGalleryItem(galleryItem: GalleryItem){
-    // re implement method
-
-
-    
+  getGallery() {
+    const token = sessionStorage.getItem('token') || '';
+    const headers:HttpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    return this.http.get<GalleryItem[]>('http://localhost:3000/api/posts/user/id', {headers});
   }
 
-  getGallery(username:string){
-    let gallery:GalleryItem[] = [] 
-    if (typeof window !== 'undefined' && window.localStorage) {
-      let galleryStr = localStorage.getItem(`gallery-${username}`)
-      if (galleryStr){
-        gallery = JSON.parse(galleryStr) 
-      }
+  saveGalleryItem(newImage: GalleryItem, username: string) {
+    const token = sessionStorage.getItem('token') || '';
+    const headers: HttpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    this.http
+      .post('http://localhost:3000/api/posts', newImage, { headers })
+      .pipe(tap( response => console.log(response) ))
+      .subscribe( response => response );
+
+    let galleryStr = localStorage.getItem(`imgs-${this.currentUser().username}`);
+    if (galleryStr) {
+      let gallery = JSON.parse(galleryStr);
+      gallery = [...gallery, newImage];
+      localStorage.setItem(`imgs-${username}`, JSON.stringify(gallery));
+    } else {
+      localStorage.setItem(`imgs-${username}`, JSON.stringify([newImage]));
     }
-    return gallery
   }
 
-  updateGalleryItem(gallery: GalleryItem[], username:string){
-    localStorage.setItem(`gallery-${username}`, JSON.stringify(gallery))
+  deletePost(postId: string):Observable<GalleryItem[]> {
+    const token = sessionStorage.getItem('token') || '';
+    const headers:HttpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    return this.http.delete<GalleryItem[]>(`http://localhost:3000/api/posts/${postId}`, {headers});
   }
 
-  saveProfile(username:string){
-    // localStorage.setItem(`profile-${username}` )
+  addComment(postId:string, comment:string):Observable<GalleryItem[]>{
+    const token = sessionStorage.getItem('token') || '';
+    const headers:HttpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    const body = {
+      postId, comment
+    }
+    return this.http.post<GalleryItem[]>('http://localhost:3000/api/posts/add/comment', body, {headers});
   }
 
-  getProfile(username:string){
-    localStorage.getItem(`profile-${username}`)
+  getProfile(username: string) {
+    localStorage.getItem(`profile-${username}`);
   }
 }

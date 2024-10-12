@@ -1,0 +1,28 @@
+<section id="profile">
+    <div>
+        <img [src]="profilePhoto || 'avatar.jpg'" />
+        <p>Hola {{ user().username }}!</p>
+    </div>
+    <div>
+        <h2>{{ followers }}</h2>
+        seguidores
+    </div>
+    <div>
+        <h2>{{ galleryItems().length }}</h2>
+        publicaciones
+    </div>
+    <div>
+        <h2>{{ requests }}</h2>
+        solicitudes
+    </div>
+</section>
+<section id="gallery">
+    <div class="gallery-item" *ngFor="let item of galleryItems()">
+        <img [src]="item.url" />
+        <div class="comments">
+            <input type="text" (change)="onAddComment($event, item.id)"/>
+            <a (click)="onViewComments(item.comments)"><i class="fas fa-comments"></i></a>
+            <a (click)="onDelete(item.id)"><i class="fas fa-trash-alt"></i></a>
+        </div>
+    </div>
+</section>

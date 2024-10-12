@@ -1,27 +1,29 @@
-section {
+section{
     display: flex;
     flex-direction: column;
-    justify-content: center;
-}
-
-input {
-    display: none;
-}
-
-label {
-    cursor: pointer;
-    text-align: center;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    align-items: center;
+  }
+  .inputfile{
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      z-index: -1;
+  }
+  
+  .inputfile + label {
+    color: white;
     background-color: #fb8500;
-}
-label:hover{
-    background-color: #a55800;
-}
-
-
-img {
-    width: 40%;
-    object-fit: cover;
-}
+    border-radius: 5px;
+    cursor: pointer;
+    padding:10px;
+    margin:5px;
+  }
+  
+  .inputfile + label:hover{
+    background-color: #d00000;
+  }
+  
+  img{
+    width: 50%;
+    margin:20px;
+  }
