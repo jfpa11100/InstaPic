@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { User } from '../interfaces/user.interface';
 import {
   LogInResponse,
@@ -72,7 +72,7 @@ export class UserService {
     this.currentUser.set(user);
   }
 
-  getUser() {
+  getUser():WritableSignal<User> {
     if (!this.currentUser().username) {
       if (typeof window !== 'undefined' && window.localStorage) {
         const userSrt = localStorage.getItem('userLogged');
