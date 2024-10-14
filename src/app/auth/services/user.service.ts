@@ -86,10 +86,15 @@ export class UserService {
   }
 
   getGallery() {
-    const token = sessionStorage.getItem('token') || '';
-    const headers:HttpHeaders = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
+    let headers: HttpHeaders | undefined 
+
+    if (typeof window !== 'undefined' && window.sessionStorage){
+      const token = sessionStorage.getItem('token') || '';
+      headers = new HttpHeaders({
+        Authorization: `Bearer ${token}`
+      });
+    }
+    
     return this.http.get<GalleryItem[]>('http://localhost:3000/api/posts/user/id', {headers});
   }
 
@@ -102,7 +107,7 @@ export class UserService {
     this.http
       .post('http://localhost:3000/api/posts', newImage, { headers })
       .pipe(tap( response => console.log(response) ))
-      .subscribe( response => response );
+      .subscribe( response => console.log(response) );
 
     let galleryStr = localStorage.getItem(`imgs-${this.currentUser().username}`);
     if (galleryStr) {
@@ -112,6 +117,22 @@ export class UserService {
     } else {
       localStorage.setItem(`imgs-${username}`, JSON.stringify([newImage]));
     }
+  }
+
+  updateUser(updateUser: User){
+    const token = sessionStorage.getItem('token') || '';
+    const headers: HttpHeaders = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    const userBeforeUpdate:User = this.currentUser()
+
+    this.currentUser.set({ ...userBeforeUpdate, ...updateUser})
+
+    this.http
+      .patch('http://localhost:3000/api/user', updateUser, { headers })
+      .pipe(tap( response => console.log(response) ))
+      .subscribe( response => response );
   }
 
   deletePost(postId: string):Observable<GalleryItem[]> {

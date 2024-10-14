@@ -1,6 +1,6 @@
 <section id="profile">
     <div>
-        <img [src]="profilePhoto || 'avatar.jpg'" />
+        <img [src]="user().photo || 'avatar.jpg'" />
         <p>Hola {{ user().username }}!</p>
     </div>
     <div>

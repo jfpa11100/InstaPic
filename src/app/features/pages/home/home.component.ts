@@ -13,10 +13,11 @@ import { PostsComponent } from '../../components/posts/posts.component';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
+
   followers:number = 20
   requests = 150
-  profilePhoto = ''
   uploadedPosts = 2
+
   user;
 
   constructor(private userService: UserService) {
