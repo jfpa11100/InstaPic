@@ -71,8 +71,8 @@ export class NewPostComponent {
 
         Swal.close();
         inputFile.value = '';
-      })
-      .catch(() => {
+        
+      }).catch(() => {
         Swal.close();
         Swal.fire('Error', 'Ocurrió un error al cargar los datos', 'error');
       });

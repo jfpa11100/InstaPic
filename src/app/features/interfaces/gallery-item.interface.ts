@@ -3,3 +3,8 @@ export interface GalleryItem{
     url: string;
     comments: string[];
 }
+
+export interface Comment{
+    id: string;
+    comment: string;
+}

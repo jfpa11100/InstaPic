@@ -21,7 +21,8 @@ export class UserService {
     const body = {
       username,
       password,
-    };
+    }
+
     return this.http
       .post<UserLoginResponse>('http://localhost:3000/api/user/login', body)
       .pipe(
@@ -85,27 +86,26 @@ export class UserService {
     return this.currentUser;
   }
 
-  getGallery() {
-    let headers: HttpHeaders | undefined 
+  getGallery(): Observable<GalleryItem[]> {
+    return this.http.get<GalleryItem[]>('http://localhost:3000/api/posts', this.getHeaders());
+  }
 
+  private getHeaders(){
+    let token: string | null = '';
     if (typeof window !== 'undefined' && window.sessionStorage){
-      const token = sessionStorage.getItem('token') || '';
-      headers = new HttpHeaders({
-        Authorization: `Bearer ${token}`
-      });
+      token = sessionStorage.getItem('token');
     }
-    
-    return this.http.get<GalleryItem[]>('http://localhost:3000/api/posts/user/id', {headers});
+
+    return {
+      headers: new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+      })
+    }
   }
 
   saveGalleryItem(newImage: GalleryItem, username: string) {
-    const token = sessionStorage.getItem('token') || '';
-    const headers: HttpHeaders = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-
     this.http
-      .post('http://localhost:3000/api/posts', newImage, { headers })
+      .post('http://localhost:3000/api/posts', newImage, this.getHeaders())
       .pipe(tap( response => console.log(response) ))
       .subscribe( response => console.log(response) );
 
@@ -120,38 +120,25 @@ export class UserService {
   }
 
   updateUser(updateUser: User){
-    const token = sessionStorage.getItem('token') || '';
-    const headers: HttpHeaders = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-    });
-
     const userBeforeUpdate:User = this.currentUser()
 
     this.currentUser.set({ ...userBeforeUpdate, ...updateUser})
 
     this.http
-      .patch('http://localhost:3000/api/user', updateUser, { headers })
+      .patch('http://localhost:3000/api/user', updateUser, this.getHeaders())
       .pipe(tap( response => console.log(response) ))
       .subscribe( response => response );
   }
 
   deletePost(postId: string):Observable<GalleryItem[]> {
-    const token = sessionStorage.getItem('token') || '';
-    const headers:HttpHeaders = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-    return this.http.delete<GalleryItem[]>(`http://localhost:3000/api/posts/${postId}`, {headers});
+    return this.http.delete<GalleryItem[]>(`http://localhost:3000/api/posts/${postId}`, this.getHeaders());
   }
 
   addComment(postId:string, comment:string):Observable<GalleryItem[]>{
-    const token = sessionStorage.getItem('token') || '';
-    const headers:HttpHeaders = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
     const body = {
       postId, comment
     }
-    return this.http.post<GalleryItem[]>('http://localhost:3000/api/posts/add/comment', body, {headers});
+    return this.http.post<GalleryItem[]>('http://localhost:3000/api/posts/comment', body, this.getHeaders());
   }
 
   getProfile(username: string) {
