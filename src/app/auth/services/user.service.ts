@@ -26,7 +26,7 @@ export class UserService {
     return this.http
       .post<UserLoginResponse>('http://localhost:3000/api/user/login', body)
       .pipe(
-        tap((data) => {
+        tap(data => {
           sessionStorage.setItem('token', data.token);
           this.setUser({
             name: data.name,
@@ -53,7 +53,7 @@ export class UserService {
     return this.http
       .post<UserLoginResponse>('http://localhost:3000/api/user', body)
       .pipe(
-        tap((data) => {
+        tap(data => {
           sessionStorage.setItem('token', data.token);
           this.setUser({
             name: data.name,
@@ -91,9 +91,9 @@ export class UserService {
   }
 
   private getHeaders(){
-    let token: string | null = '';
+    let token = '';
     if (typeof window !== 'undefined' && window.sessionStorage){
-      token = sessionStorage.getItem('token');
+      token = sessionStorage.getItem('token') || '';
     }
 
     return {

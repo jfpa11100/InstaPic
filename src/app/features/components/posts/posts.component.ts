@@ -28,10 +28,15 @@ export class PostsComponent implements OnInit {
     }
     this.userService.addComment(postId, input.value).subscribe(this.galleryItems.set);
     input.value = '';
+    Swal.fire({
+      icon: 'success',
+      text: 'Comentario agregado',
+    })
   }
 
   onViewComments(comments: Comment[]){
-    let htmlText = 'Aun no hay comentarios'
+    console.log(comments);
+    let htmlText = 'Aún no hay comentarios'
     if(comments.length > 0){
       htmlText = '<div>'
       comments.forEach(item => {

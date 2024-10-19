@@ -1,4 +1,4 @@
-import { Component, Signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../auth/services/user.service';
 
@@ -28,10 +28,8 @@ import { UserService } from '../../../auth/services/user.service';
 })
 export class HeaderComponent {
 
-  userService: UserService;
   user;
-  constructor(private router:Router, private us:UserService){
-    this.userService = us;
+  constructor(private router:Router, private userService:UserService){
     this.user = this.userService.getUser();
   }
 
