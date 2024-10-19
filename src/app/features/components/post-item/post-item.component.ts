@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Comment } from '../../interfaces/gallery-item.interface';
 
 @Component({
   selector: 'app-post-item',
@@ -11,7 +12,7 @@ export class PostItemComponent {
 
   @Input() id!: string;
   @Input() url!: string;
-  @Input() comments!: string[];
+  @Input() comments!: Comment[];
   
   @Output() addComment = new EventEmitter();
   @Output() deleteComment = new EventEmitter();
