@@ -1,10 +1,12 @@
-<section id="gallery">
-    <div class="gallery-item" *ngFor="let item of galleryItems()">
-        <img [src]="item.url" />
-        <div class="comments">
-            <input type="text" (change)="onAddComment($event, item.id)"/>
-            <a (click)="onViewComments(item.comments)"><i class="fas fa-comments"></i></a>
-            <a (click)="onDelete(item.id)"><i class="fas fa-trash-alt"></i></a>
-        </div>
-    </div>
+<section>
+  <div class="gallery-item" *ngFor="let item of galleryItems()">
+    <app-post-item
+      [id]="item.id"
+      [url] = "item.url"
+      [comments]="item.comments"
+      (addComment)="onAddComment($event, item.id)"
+      (deleteComment)="onDeletePost(item.id)"
+      (viewComments)="onViewComments(item.comments)"
+    />
+  </div>
 </section>

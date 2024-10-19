@@ -1,0 +1,6 @@
+<img [src]="url" />
+<div class="comments">
+    <input type="text" (change)="onAddComment($event)"/>
+    <a (click)="onViewComments()"><i class="fas fa-comments"></i></a>
+    <a (click)="onDelete()"><i class="fas fa-trash-alt"></i></a>
+</div>

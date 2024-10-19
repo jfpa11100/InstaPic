@@ -3,11 +3,12 @@ import { Component, signal } from '@angular/core';
 import { GalleryItem } from '../../interfaces/gallery-item.interface';
 import { UserService } from '../../../auth/services/user.service';
 import Swal from 'sweetalert2';
+import { PostItemComponent } from "../post-item/post-item.component";
 
 @Component({
   selector: 'app-posts',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, PostItemComponent],
   templateUrl: './posts.component.html',
   styleUrl: './posts.component.css'
 })
@@ -41,7 +42,7 @@ export class PostsComponent {
     })
   }
 
-  onDelete(id: string){
+  onDeletePost(id: string){
     Swal.fire({
       text: 'Está seguro de eliminar la imagen',
       icon: 'warning',
