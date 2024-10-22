@@ -4,7 +4,8 @@ import { UserService } from '../../../auth/services/user.service';
 import { v4 as uuidv4 } from 'uuid';
 import { PostsService } from '../../services/posts.service';
 import { RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { User } from '../../../auth/interfaces/user.interface';
 
 @Component({
   selector: 'app-profile',
@@ -27,7 +28,10 @@ export class ProfileComponent implements OnDestroy {
   ) {
     this.user = this.userService.getUser();
     this.editForm = this.fb.group({
-
+      name: [this.user().name],
+      email: [this.user().email || ''],
+      password: [''],
+      rePassword: ['', ]  
     });
   }
   ngOnDestroy(): void {
@@ -57,14 +61,6 @@ export class ProfileComponent implements OnDestroy {
     .uploadFile(file, this.fileName, 'profile', this.user().username)
     .then(data => {
         this.uploadedUrl = data!;
-
-        this.userService.updateUser({
-          ...this.user(),
-          photo: this.uploadedUrl,
-        });
-
-        this.user = this.userService.getUser();
-
         Swal.close();
         inputFile.value = '';
       })
@@ -74,5 +70,38 @@ export class ProfileComponent implements OnDestroy {
       });
   }
 
-  onSave() {}
+  onSave() {
+    const name = this.editForm.value.name || ''
+    const email = this.editForm.value.email || ''
+    const newPassword = this.editForm.value.password
+    const rePassword = this.editForm.value.rePassword
+
+    let userUpdate: User = {
+      username: this.user().username,
+      name: name? name : this.user().name,
+      photo: this.uploadedUrl ? this.uploadedUrl : this.user().photo,
+      email: email && email.length > 8 ? email : this.user().email
+    }
+
+    if(newPassword !== rePassword){
+      Swal.fire({
+        icon:'error',
+        text: 'Contraseñas no coinciden',
+      })
+      return
+    }
+
+    if (newPassword === rePassword && newPassword.length > 8){
+      userUpdate.password = newPassword
+    }
+  
+    this.userService.updateUser(userUpdate);
+    this.updated = true;
+    Swal.fire({
+      icon:'success',
+      text: 'Usuario actualizado',
+    })
+    this.user = this.userService.getUser();
+
+  }
 }

@@ -1,35 +1,71 @@
-.section {
-    color: white;
-    width:80%;
-    margin-bottom: 15px;
-    text-align: center;
-  }
-
-  .section img{
+  section {
+    display: flex;
+    flex-direction: column;
     background-color: white;
-    padding: 10px;
-    border-radius: 40px;
-    width: 100px;
-    object-fit: cover;
-  }
+    width: 500px;
+    min-width: 300px;
+    padding: 45px 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0.1);
+    align-items: center;
+    justify-content: center;
+}
 
-  .section img:hover{
-    opacity: 0.5;
-    transition: opacity 0.3s;
-    cursor: pointer;
-  }
+header {
+  background-color: inherit;
+}
 
-  .section input {
-    width: 100%;
-  }
+header img{
+  background-color: white;
+  padding: 10px;
+  border-radius: 40px;
+  width: 100px;
+  object-fit: cover;
+}
 
-  .photo{
+header img:hover{
+  opacity: 0.5;
+  transition: opacity 0.3s;
+  cursor: pointer;
+}
+
+section h2 {
     text-align: center;
-  }
-  
-  label {
+    margin-bottom: 15px;
+}
+
+section input {
+    background-color: white;
+    border: 2px solid #219ebc;
+    color: #023047;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    width: 100%;
     display: block;
-    margin-bottom: 8px;
-    text-align: left;
-    font-weight: 500;
-  }
+    margin: 0 auto 20px auto;
+    box-sizing: border-box;
+}
+section input:focus {
+    border-color: #fb8500 ;
+    outline: none;
+    background-color: #e4faff;
+}
+
+section a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    width: 100px;
+    padding: 5px 15px;
+    border-radius: 5px;
+}
+
+section a + a{
+    margin-top: 20px;
+}
+
+section a:hover {
+    background-color: #023047;
+}

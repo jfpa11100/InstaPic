@@ -32,6 +32,7 @@ export class UserService {
             name: data.name,
             photo: data.photo,
             username: data.username,
+            email: data.email,
           });
         }),
         map(() => {
@@ -59,6 +60,7 @@ export class UserService {
             name: data.name,
             photo: data.photo,
             username: data.username,
+            email: data.email,
           });
         }),
         map(() => {
@@ -90,16 +92,6 @@ export class UserService {
     return this.http.get<GalleryItem[]>('http://localhost:3000/api/posts', this.getHeaders());
   }
 
-  private getHeaders(){
-    const token = sessionStorage.getItem('token') || '';
-
-    return {
-      headers: new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-      })
-    }
-  }
-
   saveImage(id:string, url: string) {
     return this.http
       .post('http://localhost:3000/api/posts', {id, url}, this.getHeaders())
@@ -108,14 +100,12 @@ export class UserService {
   }
 
   updateUser(updateUser: User){
-    const userBeforeUpdate:User = this.currentUser()
-
-    this.currentUser.set({ ...userBeforeUpdate, ...updateUser})
-
+    this.currentUser.set({ ...this.currentUser(), ...updateUser})
+    console.log("User to update: ", this.currentUser())
     return this.http
-      .patch('http://localhost:3000/api/user', updateUser, this.getHeaders())
-      .pipe(tap( response => console.log(response) ))
-      .subscribe( response => response );
+      .patch('http://localhost:3000/api/user', this.currentUser(), this.getHeaders())
+      .pipe(tap( response => console.log("response: ", response) ))
+      .subscribe();
   }
 
   deletePost(postId: string): Observable<GalleryItem[]> {
@@ -135,5 +125,15 @@ export class UserService {
 
   getProfile(username: string) {
     localStorage.getItem(`profile-${username}`);
+  }
+
+  private getHeaders(){
+    const token = sessionStorage.getItem('token') || '';
+
+    return {
+      headers: new HttpHeaders({
+          Authorization: `Bearer ${token}`,
+      })
+    }
   }
 }

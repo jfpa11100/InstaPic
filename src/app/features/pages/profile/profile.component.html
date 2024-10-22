@@ -1,36 +1,28 @@
 <section>
   <form [formGroup]="editForm">
-    <label class="photo" for="photo">
-      <img title="Change" [src]="this.user().photo || 'avatar.jpg'" />
-    </label>
-    <input
-      style="display: none"
-      type="file"
-      id="photo"
-      (change)="onUpload($event)"
-    />
+    <header>
+      <label class="photo" for="photo">
+        <img title="Change" [src]="this.uploadedUrl || this.user().photo || 'avatar.jpg'" />
+      </label>
+      <input
+        style="display: none"
+        type="file"
+        id="photo"
+        (change)="onUpload($event)"
+      />
+    </header>
 
     <input type="text" formControlName="name" placeholder="Nombre" />
-    <input
-      type="text"
-      formControlName="username"
-      placeholder="Nombre de usuario"
-    />
-    <input
-      type="email"
-      formControlName="email"
-      placeholder="Email"
-    />
+    <input type="email" formControlName="email" placeholder="Email" />
+    
     <input
       type="password"
       formControlName="password"
-      id="password"
       placeholder="Nueva contraseña"
     />
     <input
       type="password"
       formControlName="rePassword"
-      id="re-password"
       placeholder="Confirmar contraseña"
     />
   </form>
