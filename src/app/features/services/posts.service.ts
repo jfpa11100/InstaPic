@@ -1,8 +1,7 @@
-import { Inject, Injectable, NgZone, PLATFORM_ID } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 import { isPlatformBrowser } from '@angular/common';
-import { error } from 'console';
 
 
 @Injectable({
@@ -26,18 +25,21 @@ export class PostsService {
       console.log(error)
       throw error;
     }
-    const { data } = this.supabase!.storage.from('instapic').getPublicUrl(`${folderName}/${fileName}`)
+    const { data } = this.supabase!.storage.from(bucketName).getPublicUrl(`${folderName}/${fileName}`)
     return data.publicUrl;
   }
 
-  async deletePhoto(uploadedUrl: string, bucketName:string, folderName = 'base') {
+  async deletePhoto(id: string, bucketName:string, folderName = 'base') {
+    console.log("id ", id)
+    console.log("folder ", folderName)
     const {data, error} = await this.supabase!
       .storage
       .from(bucketName)
-      .remove([`${folderName}/${uploadedUrl}`])
+      .remove([`${folderName}/${id}`])
     if (error){
       console.error(error)
     }
+    console.log(data)
     return data
   }
 

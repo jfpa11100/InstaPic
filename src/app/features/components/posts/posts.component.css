@@ -10,6 +10,35 @@ section .gallery-item{
     flex-direction: column;
 }
 
+div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: fit-content
+}
+
+div button {
+    cursor: pointer;
+    font: inherit;
+    width: fit-content;
+    margin-top: 100px;
+    background-color: transparent;
+    border: 2px solid #219ebc;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 10px;
+    
+}
+div button:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+}
+
+div button svg {
+    width: 10%;
+}
+
+
 .gallery-item{
     height: 260px;
     justify-content: center;

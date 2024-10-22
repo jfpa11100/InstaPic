@@ -100,9 +100,9 @@ export class UserService {
     }
   }
 
-  saveImage(url: string) {
+  saveImage(id:string, url: string) {
     return this.http
-      .post('http://localhost:3000/api/posts', {url}, this.getHeaders())
+      .post('http://localhost:3000/api/posts', {id, url}, this.getHeaders())
       .pipe(tap( response => console.log(response) ))
       .subscribe( response => console.log(response) );
   }

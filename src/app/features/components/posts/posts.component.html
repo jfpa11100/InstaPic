@@ -1,4 +1,14 @@
 <section>
+  <div style="display: flex;" *ngIf="galleryItems().length === 0">
+    <button [routerLink]="['/new-post']">
+      <h2>Agrega Publicaciones</h2>
+      <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M200 350C282.843 350 350 282.843 350 200C350 117.157 282.843 50 200 50C117.157 50 50 117.157 50 200C50 282.843 117.157 350 200 350Z" stroke="#023047" stroke-width="12" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M200 125.03V282.8" stroke="#000000" stroke-width="12" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M278.89 203.91H121.11" stroke="#000000" stroke-width="12" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
   <div class="gallery-item" *ngFor="let item of galleryItems()">
     <app-post-item
       [id]="item.id"

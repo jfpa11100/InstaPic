@@ -4,18 +4,26 @@ import { GalleryItem, Comment } from '../../interfaces/gallery-item.interface';
 import { UserService } from '../../../auth/services/user.service';
 import Swal from 'sweetalert2';
 import { PostItemComponent } from "../post-item/post-item.component";
+import { RouterLink } from '@angular/router';
+import { PostsService } from '../../services/posts.service';
 
 @Component({
   selector: 'app-posts',
   standalone: true,
-  imports: [CommonModule, PostItemComponent],
+  imports: [CommonModule, PostItemComponent, RouterLink],
   templateUrl: './posts.component.html',
   styleUrl: './posts.component.css'
 })
 export class PostsComponent implements OnInit {
   galleryItems = signal<GalleryItem[]>([]);
+  user;
     
-  constructor(private userService: UserService) { }
+  constructor(
+    private userService: UserService,
+    private postsService: PostsService
+  ) { 
+    this.user = this.userService.getUser()
+  }
 
   ngOnInit(): void {
     this.userService.getGallery().subscribe(this.galleryItems.set);
@@ -62,6 +70,7 @@ export class PostsComponent implements OnInit {
     }).then(result => {
       if (result.isConfirmed) {
         this.userService.deletePost(id).subscribe(this.galleryItems.set);
+        this.postsService.deletePhoto(id, 'instapic', this.user().username)
         Swal.fire('Imagen eliminada', '', 'success')
       } else if (result.isDismissed) {
         Swal.fire('Operación cancelada', '', 'info')

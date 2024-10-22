@@ -16,7 +16,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 export class ProfileComponent implements OnDestroy {
   user;
   uploadedUrl = '';
-  updated = false;
+  updated = false
+  fileName = '';
   editForm: FormGroup;
 
   constructor(
@@ -31,7 +32,7 @@ export class ProfileComponent implements OnDestroy {
   }
   ngOnDestroy(): void {
     if(!this.updated && this.uploadedUrl !== ''){
-      this.postsService.deletePhoto(this.uploadedUrl, 'profile', this.user().username)
+      this.postsService.deletePhoto(this.fileName, 'profile', this.user().username)
     }
   }
 
@@ -50,10 +51,10 @@ export class ProfileComponent implements OnDestroy {
       return;
     }
     const file: File = inputFile.files[0];
-    const fileName = uuidv4();
+    this.fileName = uuidv4();
 
     this.postsService
-    .uploadFile(file, fileName, 'profile', this.user().username)
+    .uploadFile(file, this.fileName, 'profile', this.user().username)
     .then(data => {
         this.uploadedUrl = data!;
 

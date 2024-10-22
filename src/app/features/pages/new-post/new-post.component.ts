@@ -60,7 +60,7 @@ export class NewPostComponent {
       .then(data => {
         this.uploadedUrl = data!;
 
-        this.userService.saveImage(this.uploadedUrl);
+        this.userService.saveImage(fileName, this.uploadedUrl);
 
         Swal.close();
         inputFile.value = '';
