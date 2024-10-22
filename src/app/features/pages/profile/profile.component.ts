@@ -1,31 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import Swal from 'sweetalert2';
 import { UserService } from '../../../auth/services/user.service';
 import { v4 as uuidv4 } from 'uuid';
 import { PostsService } from '../../services/posts.service';
+import { RouterLink } from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [],
-  template: `
-    <section>
-      <label>Foto de perfil:</label>
-      <label class="photo" for="photo">
-        <img title="Change" [src]="uploadedUrl">
-      </label>
-      <input style="display: none;" type="file" id="photo" (change)="onUpload($event)">
-    </section>
-  `,
+  imports: [RouterLink, ReactiveFormsModule],
+  templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
 })
-export class ProfileComponent {
-  uploadedUrl: string;
+export class ProfileComponent implements OnDestroy {
   user;
+  uploadedUrl = '';
+  updated = false;
+  editForm: FormGroup;
 
-  constructor(private userService: UserService, private postsService: PostsService) {
+  constructor(
+    private userService: UserService,
+    private postsService: PostsService,
+    private fb: FormBuilder
+  ) {
     this.user = this.userService.getUser();
-    this.uploadedUrl = this.user().photo || 'avatar.jpg'
+    this.editForm = this.fb.group({
+
+    });
+  }
+  ngOnDestroy(): void {
+    if(!this.updated && this.uploadedUrl !== ''){
+      this.postsService.deletePhoto(this.uploadedUrl, 'profile', this.user().username)
+    }
   }
 
   onUpload(event: Event) {
@@ -46,13 +53,16 @@ export class ProfileComponent {
     const fileName = uuidv4();
 
     this.postsService
-      .uploadFile(file, fileName, 'profile', this.user().username)
-      .then(data => {
+    .uploadFile(file, fileName, 'profile', this.user().username)
+    .then(data => {
         this.uploadedUrl = data!;
 
-        this.userService.updateUser({ ...this.user(), photo:this.uploadedUrl });
+        this.userService.updateUser({
+          ...this.user(),
+          photo: this.uploadedUrl,
+        });
 
-        this.user = this.userService.getUser(); 
+        this.user = this.userService.getUser();
 
         Swal.close();
         inputFile.value = '';
@@ -62,4 +72,6 @@ export class ProfileComponent {
         Swal.fire('Error', 'Ocurrió un error al cargar la foto', 'error');
       });
   }
+
+  onSave() {}
 }
