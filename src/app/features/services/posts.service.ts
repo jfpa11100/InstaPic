@@ -20,7 +20,7 @@ export class PostsService {
     }
   }
 
-  async uploadFile(file:File, fileName:string, folderName:string = 'base'){
+  async uploadFile(file:File, fileName:string, bucketName:string, folderName:string = 'base'){
     const { error } = await this.supabase!.storage.from('instapic').upload(`${folderName}/${fileName}`, file);
     if(error){
       console.log(error)

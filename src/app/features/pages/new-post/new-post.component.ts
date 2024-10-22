@@ -56,18 +56,11 @@ export class NewPostComponent {
     const fileName = uuidv4();
 
     this.postsService
-      .uploadFile(file, fileName, this.user().username)
+      .uploadFile(file, fileName, 'instapic', this.user().username)
       .then(data => {
         this.uploadedUrl = data!;
 
-        this.userService.saveGalleryItem(
-          {
-            id: fileName,
-            url: this.uploadedUrl,
-            comments: [],
-          },
-          this.user().username
-        );
+        this.userService.saveImage(this.uploadedUrl);
 
         Swal.close();
         inputFile.value = '';

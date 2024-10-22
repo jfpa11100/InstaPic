@@ -6,7 +6,7 @@ import {
 } from '../interfaces/login-response.interface';
 import { GalleryItem } from '../../features/interfaces/gallery-item.interface';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, map, tap, throwError } from 'rxjs';
+import { Observable, catchError, map, switchMap, tap, throwError } from 'rxjs';
 import { UserLoginResponse } from '../interfaces/user-login-response.interface';
 
 @Injectable({
@@ -91,10 +91,7 @@ export class UserService {
   }
 
   private getHeaders(){
-    let token = '';
-    if (typeof window !== 'undefined' && window.sessionStorage){
-      token = sessionStorage.getItem('token') || '';
-    }
+    const token = sessionStorage.getItem('token') || '';
 
     return {
       headers: new HttpHeaders({
@@ -103,20 +100,11 @@ export class UserService {
     }
   }
 
-  saveGalleryItem(newImage: GalleryItem, username: string) {
-    this.http
-      .post('http://localhost:3000/api/posts', newImage, this.getHeaders())
+  saveImage(url: string) {
+    return this.http
+      .post('http://localhost:3000/api/posts', {url}, this.getHeaders())
       .pipe(tap( response => console.log(response) ))
       .subscribe( response => console.log(response) );
-
-    let galleryStr = localStorage.getItem(`imgs-${this.currentUser().username}`);
-    if (galleryStr) {
-      let gallery = JSON.parse(galleryStr);
-      gallery = [...gallery, newImage];
-      localStorage.setItem(`imgs-${username}`, JSON.stringify(gallery));
-    } else {
-      localStorage.setItem(`imgs-${username}`, JSON.stringify([newImage]));
-    }
   }
 
   updateUser(updateUser: User){
@@ -124,21 +112,25 @@ export class UserService {
 
     this.currentUser.set({ ...userBeforeUpdate, ...updateUser})
 
-    this.http
+    return this.http
       .patch('http://localhost:3000/api/user', updateUser, this.getHeaders())
       .pipe(tap( response => console.log(response) ))
       .subscribe( response => response );
   }
 
-  deletePost(postId: string):Observable<GalleryItem[]> {
-    return this.http.delete<GalleryItem[]>(`http://localhost:3000/api/posts/${postId}`, this.getHeaders());
+  deletePost(postId: string): Observable<GalleryItem[]> {
+    return this.http.delete<GalleryItem[]>(`http://localhost:3000/api/posts/${postId}`, this.getHeaders()).pipe(
+      switchMap(() => this.getGallery())
+    )
   }
 
   addComment(postId:string, comment:string):Observable<GalleryItem[]>{
     const body = {
       postId, comment
     }
-    return this.http.post<GalleryItem[]>('http://localhost:3000/api/posts/comment', body, this.getHeaders());
+    return this.http.post<GalleryItem[]>('http://localhost:3000/api/posts/comment', body, this.getHeaders()).pipe(
+      switchMap(() => this.getGallery())
+    )
   }
 
   getProfile(username: string) {

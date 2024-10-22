@@ -46,7 +46,7 @@ export class ProfileComponent {
     const fileName = uuidv4();
 
     this.postsService
-      .uploadFile(file, fileName, this.user().username)
+      .uploadFile(file, fileName, 'profile', this.user().username)
       .then(data => {
         this.uploadedUrl = data!;
 
