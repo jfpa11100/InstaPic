@@ -4,7 +4,12 @@ import { UserService } from '../../../auth/services/user.service';
 import { v4 as uuidv4 } from 'uuid';
 import { PostsService } from '../../services/posts.service';
 import { RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { User } from '../../../auth/interfaces/user.interface';
 
 @Component({
@@ -17,7 +22,7 @@ import { User } from '../../../auth/interfaces/user.interface';
 export class ProfileComponent implements OnDestroy {
   user;
   uploadedUrl = '';
-  updated = false
+  updated = false;
   fileName = '';
   editForm: FormGroup;
 
@@ -31,12 +36,16 @@ export class ProfileComponent implements OnDestroy {
       name: [this.user().name],
       email: [this.user().email || ''],
       password: [''],
-      rePassword: ['', ]  
+      rePassword: [''],
     });
   }
   ngOnDestroy(): void {
-    if(!this.updated && this.uploadedUrl !== ''){
-      this.postsService.deletePhoto(this.fileName, 'profile', this.user().username)
+    if (!this.updated && this.uploadedUrl !== '') {
+      this.postsService.deletePhoto(
+        this.fileName,
+        'profile',
+        this.user().username
+      );
     }
   }
 
@@ -58,8 +67,8 @@ export class ProfileComponent implements OnDestroy {
     this.fileName = uuidv4();
 
     this.postsService
-    .uploadFile(file, this.fileName, 'profile', this.user().username)
-    .then(data => {
+      .uploadFile(file, this.fileName, 'profile', this.user().username)
+      .then((data) => {
         this.uploadedUrl = data!;
         Swal.close();
         inputFile.value = '';
@@ -71,37 +80,48 @@ export class ProfileComponent implements OnDestroy {
   }
 
   onSave() {
-    const name = this.editForm.value.name || ''
-    const email = this.editForm.value.email || ''
-    const newPassword = this.editForm.value.password
-    const rePassword = this.editForm.value.rePassword
+    const name = this.editForm.value.name || '';
+    const email = this.editForm.value.email || '';
+    const newPassword = this.editForm.value.password;
+    const rePassword = this.editForm.value.rePassword;
 
     let userUpdate: User = {
       username: this.user().username,
-      name: name? name : this.user().name,
+      name: name ? name : this.user().name,
       photo: this.uploadedUrl ? this.uploadedUrl : this.user().photo,
-      email: email && email.length > 8 ? email : this.user().email
-    }
+      email: email && email.length > 8 ? email : this.user().email,
+    };
 
-    if(newPassword !== rePassword){
+    if (newPassword !== rePassword) {
       Swal.fire({
-        icon:'error',
+        icon: 'error',
         text: 'Contraseñas no coinciden',
-      })
-      return
+      });
+      return;
     }
 
-    if (newPassword === rePassword && newPassword.length > 8){
-      userUpdate.password = newPassword
+    if (newPassword === rePassword && newPassword.length > 8) {
+      userUpdate.password = newPassword;
     }
-  
+    if (this.user().photo){
+      this.postsService.deletePhoto(
+        this.getFilePathFromUrl(this.user().photo!),
+        'profile',
+        this.user().username
+      );
+    }
     this.userService.updateUser(userUpdate);
     this.updated = true;
     Swal.fire({
-      icon:'success',
+      icon: 'success',
       text: 'Usuario actualizado',
-    })
+    });
     this.user = this.userService.getUser();
+    this.editForm.reset()
+  }
 
+  getFilePathFromUrl(url: string): string {
+    const urlParts = url.split('/');
+    return urlParts.slice(-1)[0];
   }
 }

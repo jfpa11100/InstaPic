@@ -48,11 +48,8 @@ export class UserService {
   }
 
   register(user: User): Observable<SignUpResponse> {
-    const body = user;
-    console.log(body);
-
     return this.http
-      .post<UserLoginResponse>('http://localhost:3000/api/user', body)
+      .post<UserLoginResponse>('http://localhost:3000/api/user', user)
       .pipe(
         tap(data => {
           sessionStorage.setItem('token', data.token);
@@ -96,15 +93,14 @@ export class UserService {
     return this.http
       .post('http://localhost:3000/api/posts', {id, url}, this.getHeaders())
       .pipe(tap( response => console.log(response) ))
-      .subscribe( response => console.log(response) );
+      .subscribe();
   }
 
   updateUser(updateUser: User){
     this.currentUser.set({ ...this.currentUser(), ...updateUser})
-    console.log("User to update: ", this.currentUser())
     return this.http
       .patch('http://localhost:3000/api/user', this.currentUser(), this.getHeaders())
-      .pipe(tap( response => console.log("response: ", response) ))
+      .pipe(tap( response => console.log(response) ))
       .subscribe();
   }
 

@@ -30,8 +30,6 @@ export class PostsService {
   }
 
   async deletePhoto(id: string, bucketName:string, folderName = 'base') {
-    console.log("id ", id)
-    console.log("folder ", folderName)
     const {data, error} = await this.supabase!
       .storage
       .from(bucketName)
