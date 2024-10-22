@@ -112,11 +112,11 @@ export class ProfileComponent implements OnDestroy {
     }
     this.userService.updateUser(userUpdate);
     this.updated = true;
+    this.user = this.userService.getUser();
     Swal.fire({
       icon: 'success',
       text: 'Usuario actualizado',
     });
-    this.user = this.userService.getUser();
     this.editForm.reset()
   }
 
