@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { GalleryItem } from '../../interfaces/gallery-item.interface';
 import { PostsComponent } from '../../components/posts/posts.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -20,8 +21,15 @@ export class HomeComponent {
 
   user;
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private activatedRoute: ActivatedRoute
+  ) {
     this.user = this.userService.getUser();
+    this.activatedRoute.paramMap.subscribe(params => {
+      const user = params.get('username') || this.user().username;
+      this.userService.findUser(user).subscribe(console.log)
+    })
   }
 
 

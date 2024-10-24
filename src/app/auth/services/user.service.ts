@@ -85,6 +85,14 @@ export class UserService {
     return this.currentUser;
   }
 
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>('http://localhost:3000/api/user');
+  }
+
+  findUser(username: string): Observable<User> {
+    return this.http.get<User>(`http://localhost:3000/api/user/${username}`);
+  }
+
   getGallery(): Observable<GalleryItem[]> {
     return this.http.get<GalleryItem[]>('http://localhost:3000/api/posts', this.getHeaders());
   }

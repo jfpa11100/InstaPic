@@ -1,0 +1,26 @@
+<section>
+    <div class="search-filter">
+        <input type="text" />
+    </div>
+    <div class="search-results">
+        @for(user of users(); track user){
+            <div class="search-card">
+                <img [src]="user.photo || 'avatar.jpg'" alt="">
+                <div class="search-info">
+                    <div>
+                        {{ user.username }}
+                    </div>
+                    <div>
+                        {{ user.username }}
+                    </div>
+                    <div>
+                        {{ user.email }}
+                    </div>
+                </div>
+                <a (click)="onView(user)" class="primary">ver</a>
+            </div>
+        }@empty {
+            <p>No hay resultados</p>
+        }
+    </div>
+</section>
